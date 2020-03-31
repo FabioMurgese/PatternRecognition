@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# idea conf files
+.idea/
+
+# beamer LaTeX
+beamer/
