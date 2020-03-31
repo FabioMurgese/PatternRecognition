@@ -10,7 +10,7 @@ np.seterr(divide='ignore', invalid='ignore')
 
 def convolution(image, kernel):
     """
-    Naive implementation of convolution filter.
+    Implementation of convolution operator.
     """
     (iH, iW) = image.shape  # image height and width
     (kH, kW) = kernel.shape  # kernel height and width
@@ -37,7 +37,7 @@ def convolution(image, kernel):
 
 def sobel_filter(data):
     """
-    Implementation of the convolution of a Sobel filter 3x3 with the final goal to obtain edges from data.
+    Implementation of the convolution of a Sobel filter 3x3 with the final goal of obtaining edges in images.
     """
     img = cv2.imread(data)
     grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
