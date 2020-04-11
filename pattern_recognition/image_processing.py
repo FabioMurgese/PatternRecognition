@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import numpy as np
 import cv2
-
+from skimage import segmentation, color
+from skimage.future import graph
+from matplotlib import pyplot as plt
 from skimage.exposure import rescale_intensity
-
 
 np.seterr(divide='ignore', invalid='ignore')
 
@@ -66,3 +67,33 @@ def sobel_filter(data):
     Gy_cv2 = cv2.Sobel(grey_img, cv2.CV_8U, 0, 1, ksize=3)
 
     return grey_img, Gx, Gy, Gx_cv2, Gy_cv2
+
+
+def normalized_cut(data):
+    """
+    Image segmentation through normalized cut.
+    """
+    img = cv2.imread(data)
+    labels1 = segmentation.slic(img, compactness=30, n_segments=400)
+    segmented_image = color.label2rgb(labels1, img, kind='avg')
+
+    g = graph.rag_mean_color(img, labels1, mode='similarity')
+    labels2 = graph.cut_normalized(labels1, g)
+    cut_normalized_image = color.label2rgb(labels2, img, kind='avg')
+
+    fig, ax = plt.subplots(nrows=2, sharex=True, sharey=True, figsize=(6, 8))
+
+    ax[0].imshow(segmented_image)
+    ax[1].imshow(cut_normalized_image)
+    return fig
+
+
+def sift_descriptor(data):
+    """
+    Create the SIFT descriptor of an image.
+    """
+    image = cv2.imread(data)
+    grey_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    sift = cv2.xfeatures2d.SIFT_create()
+    kp, des = sift.detectAndCompute(grey_img, None)
+    return kp, des
